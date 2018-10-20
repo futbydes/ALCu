@@ -12,39 +12,115 @@
 
 #include "alum1.h"
 
-
-int		main(void)
+int			main(void)
 {
-	char	**brd;
+	int		*x;
 
-	brd = get_board();
-	if (brd == 0)
+	x = get_board();
+	if (x == 0)
 	{
 		ft_printf("ERROR\n");
 		return (2);
 	}
-	alum_alg(brd);
-	board_free(brd);
+	alum_alg(x);
+	free(x);
 	return (0);
 }
 
-void		alum_alg(char **board)
-{
-	int		check;
 
-	check = 0;
-	while (!check)
+int			*get_board(void)
+{
+	char	*line;
+	int		*x;
+
+	line = 0;
+	x = 0;
+	while (get_next_line(0, &line) && ft_strlen(line))
 	{
-		printbord(board);
-		matches_p_task(board);
-		check = check_board(board, 1);
-		//printbord(board);
-		//matches_c_task(board);
-		//check = check_board(board, 2);
+		if (!get_board_linecheck(line))
+			return (0);
+		x = get_board_realloc(line, x);
+		free(line);
+	}
+	free(line);
+	return (x);
+
+}
+
+int			get_board_linecheck(char *line)
+{
+	int		x;
+	int		z;
+
+	x = 0;
+	z = ft_atoi(line);
+	while (line[x] != '\0')
+	{
+		if (!ft_isdigit(line[x]))
+			return (0);
+		x++;
+	}
+	if (z > 10000 || z < 1)
+		return (0);
+	return (1);
+}
+
+int			*get_board_realloc(char *line, int *x)
+{
+	int		z;
+	int		y;
+	int		*tmp;
+
+	z = 0;
+	y = 0;
+	while (x && x[z])
+		z++;
+	tmp = ft_memalloc(8 * (z + 2));
+	while (y != z)
+	{
+		tmp[y] = x[y];
+		y++;
+	}
+	tmp[y] = ft_atoi(line);
+	tmp[y + 1] = 0;
+	return (tmp);
+}
+
+void		alum_alg(int *brd)
+{
+	while (brd[0] != 0)
+	{
+		board_display(brd);
+		matches_p_task(brd);
+		if (brd[0] == 0)
+		{
+			ft_printf(RED "YOU LOOSE\n" RESET);
+			return ;
+		}
+	//	board_display(brd);
+	//	matches_c_task(brd);
+	}
+	brd[0] == 0 ? ft_printf(GREEN "YOU WIN\n" RESET) : 0;
+}
+
+void		board_display(int *brd)
+{
+	int		c;
+	int		x;
+
+	c = 0;
+	x = 0;
+	while (brd && brd[x])
+	{
+		c = brd[x];
+		while (c-- != 0)
+			ft_printf(CYAN "|" RESET);
+		ft_printf("\n");
+		x++;
 	}
 }
 
-int			matches_p_task(char **board)
+int			matches_p_task(int *board)
 {
 	char	*line;
 	int		res;
@@ -65,150 +141,18 @@ int			matches_p_task(char **board)
 	return (res);
 }
 
-int			check_board(char **board, int pl)
-{
-	int		c;
-	int		y;
-
-	c = 0;
-	y = -1;
-	while (board[0] && board[0][++y])
-		board[0][y] == '|' ? c++ : 0;
-	if (c == 0)
-	{
-		pl == 1 ? ft_printf(RED "YOU LOOSE\n" RESET) :
-		ft_printf(GREEN "YOU WIN\n" RESET);
-		return (1);
-	}
-	else
-		return (0);
-}
-
-int			matches_take(int matches, char **board)
+int			matches_take(int matches, int *board)
 {
 	int		x;
-	int		y;
-	int		c;
 
 	x = 0;
-	y = -1;
-	c = 0;
 	while (board[x] != 0)
 		x++;
-	x != 0 ? x-- : 0;
-	while (board[x][++y] == '|' || board[x][y] == ' ')
-		board[x][y] == '|' ? c++ : 0;
-	if (c < matches)
+	if (x && board[x - 1] < matches)
 		return (0);
-	else if (c == matches)
-	{
-		free(board[x]);
-		board[x] = 0;
-	}
+	if (board[x - 1] == matches)
+		board[x - 1] = 0;
 	else
-		while (matches)
-		{
-			board[x][y] == '|' ? matches-- : 0;
-			board[x][y] = 0;
-			y--;
-		}
+		board[x - 1] -= matches;
 	return (1);
-}
-
-
-char		**get_board(void)
-{
-	char	**board;
-	char	*line;
-
-	board = 0;
-	line = 0;
-	while (get_next_line(0, &line) > 0 && ft_strlen(line))
-	{
-		board = board_realloc(line, board);
-		free(line);	
-	}
-	free(line);
-	if (!err_board(board))
-	{
-		board_free(board);
-		return (0);
-	}
-	else
-		return (board);
-}
-
-int			err_board(char **board)
-{
-	int		x;
-	int		y;
-	int		c;
-
-	x = 0;
-	y = -1;
-	if (board == 0)
-		return (0);
-	else
-	{
-		while (board[x])
-		{
-			c = 0;
-			while ((board[x][++y] == '|' || 
-				board[x][y] == ' ') && board[x][y])
-				board[x][y] == '|' ? c++ : 0;
-			if (board[x][y] || c < 1 || c > 10000)
-				return (0);
-			y = -1;
-			x++;
-		}
-	}
-	return (1);
-}
-
-void		board_free(char **board)
-{
-	int		x;
-
-	x = 0;
-	while (board && board[x])
-	{
-		free(board[x]);
-		x++;
-	}
-	free(board);
-}
-
-char		**board_realloc(char *line, char **board)
-{
-	int		c;
-	int		x;
-	char	**tmp;
-
-	c = 0;
-	x = 0;
-	while (board && board[c] != 0)
-		c++;
-	tmp = ft_memalloc(8 * (c + 2));
-	while (x != c)
-	{
-		tmp[x] = ft_memalloc(ft_strlen(board[x]) + 1);
-		ft_strcpy(tmp[x], board[x]);
-		x++;
-	}
-	tmp[x] = ft_memalloc(ft_strlen(line) + 1);
-	ft_strcpy(tmp[x], line);
-	tmp[x + 1] = 0;
-	return (tmp);
-}
-
-void		printbord(char **board)
-{
-	int		x;
-
-	x = 0;
-	while (board[x])
-	{
-		ft_printf("%s\n", board[x]);
-		x++;
-	}
 }

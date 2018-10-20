@@ -26,16 +26,17 @@ typedef struct      s_lst
  }					t_lst;
 
 int					get_next_line(const int fd, char **line);
-char				**get_board(void);
-int					err_board(char **board);
-char				**board_realloc(char *line, char **board);
-void				printbord(char **board);
-void				board_free(char **board);
-int					matches_p_task(char **board);
-int					matches_take(int matches, char **board);
-int					check_board(char **board, int pl);
+int					*get_board(void);
+int					get_board_linecheck(char *line);
+int					*get_board_realloc(char *line, int *x);
+void				alum_alg(int *brd);
+void				board_display(int *brd);
+int					matches_p_task(int *board);
+int					matches_take(int matches, int *board);
 
-void				alum_alg(char **board);
+
+
+
 
 
 #endif
