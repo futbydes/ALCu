@@ -18,12 +18,12 @@
 # include "libft/ft_printf/ft_printf.h"
 # include <stdlib.h>
 
-typedef struct      s_lst
- {
- 	char            *buff;
- 	int             ds;
- 	struct s_lst    *next;
- }					t_lst;
+typedef struct		s_lst
+{
+	char			*buff;
+	int				ds;
+	struct s_lst	*next;
+}					t_lst;
 
 int					get_next_line(const int fd, char **line);
 int					*get_board(void);
@@ -34,11 +34,5 @@ void				board_display(int *brd);
 int					matches_p_task(int *board);
 int					matches_take(int matches, int *board);
 void				matches_c_task(int *board, int res);
-
-
-
-
-
-
 
 #endif
