@@ -17,7 +17,7 @@ SRC = ft_printf.c ft_pfflags.c ft_sizemod.c ft_typemod.c ft_ib_u.c ft_ib_s.c \
 OBJ = $(SRC:.c=.o)
 INCLUDES = ft_printf.h
 NAME = libftprintf.a
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = 
 CC = gcc
 
 %.o: %.c $(INCLUDES)

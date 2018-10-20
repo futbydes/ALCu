@@ -33,6 +33,6 @@ void				alum_alg(int *brd);
 void				board_display(int *brd);
 int					matches_p_task(int *board);
 int					matches_take(int matches, int *board);
-void				matches_c_task(int *board, int res);
+void				matches_c_task(int *board);
 
 #endif

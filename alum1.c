@@ -86,13 +86,10 @@ int			*get_board_realloc(char *line, int *x)
 
 void		alum_alg(int *brd)
 {
-	int		res;
-
-	res = 0;
 	while (brd[0] != 0)
 	{
 		board_display(brd);
-		res = matches_p_task(brd);
+		matches_p_task(brd);
 		if (brd[0] == 0)
 		{
 			ft_printf(RED "YOU LOOSE\n" RESET);
@@ -100,36 +97,16 @@ void		alum_alg(int *brd)
 		}
 		board_display(brd);
 		ft_printf(DARKGREY "BOT TURN\n" RESET);
-		matches_c_task(brd, res);
+		matches_c_task(brd);
 	}
 	brd[0] == 0 ? ft_printf(GREEN "YOU WIN\n" RESET) : 0;
 }
 
-void		matches_c_task(int *board, int res)
+void		matches_c_task(int *board)
 {
-	int		sum;
-	int		x;
 
-	res = 0;
-	sum = 0;
-	x = -1;
-	while (board[++x] != 0)
-		sum += board[x];
-	x--;
-	if ((!((sum - 1) % 5) && (sum - 1) && (board[x] - 1 != -1)) ||
-		((sum - 1 >= 1) && (board[x] - 1 != -1) && x > 0)
-		|| (sum - 1 == 1 && x == 0))
-		matches_take(1, board);
-	else if ((!((sum - 2) % 5) && (sum - 2) && (board[x] - 2 != -1)) ||
-		((sum - 2 >= 1) && (board[x] - 2 != -1) && x > 0)
-		|| (sum - 2 == 1 && x == 0))
-		matches_take(2, board);
-	else if ((!((sum - 3) % 5) && (sum - 3) && (board[x] - 3 != -1)) ||
-		((sum - 3 >= 1) && (board[x] - 3 != -1) && x > 0)
-		|| (sum - 3 == 1 && x == 0))
-		matches_take(3, board);
-	else
-		matches_take(1, board);
+	mod = ((board[x] % 4) - 1) % 4;
+	matches_take(mod == 0? 1 : mod, board);
 }
 
 void		board_display(int *brd)
