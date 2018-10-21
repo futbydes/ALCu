@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRC = get_next_line.c alum1.c
+SRC = get_next_line.c alum1.c alum1_pt2.c alum1_pt3.c
 OBJ = $(SRC:.c=.o)
 INCLUDES = alum1.h
 NAME = alum1

@@ -34,5 +34,7 @@ void				board_display(int *brd);
 int					matches_p_task(int *board);
 int					matches_take(int matches, int *board);
 void				matches_c_task(int *board);
+void				board_type(int x, int *board, int type);
+void				matches_indicator(int *board, int x, int *indicators);
 
 #endif

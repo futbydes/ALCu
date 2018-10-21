@@ -34,10 +34,14 @@ int			*get_board(void)
 
 	line = 0;
 	x = 0;
-	while (get_next_line(0, &line) && ft_strlen(line))
+	while (get_next_line(0, &line) > 0 && ft_strlen(line))
 	{
 		if (!get_board_linecheck(line))
+		{
+			free(x);
+			free(line);
 			return (0);
+		}
 		x = get_board_realloc(line, x);
 		free(line);
 	}
@@ -79,6 +83,7 @@ int			*get_board_realloc(char *line, int *x)
 		tmp[y] = x[y];
 		y++;
 	}
+	free(x);
 	tmp[y] = ft_atoi(line);
 	tmp[y + 1] = 0;
 	return (tmp);
@@ -100,65 +105,4 @@ void		alum_alg(int *brd)
 		matches_c_task(brd);
 	}
 	brd[0] == 0 ? ft_printf(GREEN "YOU WIN\n" RESET) : 0;
-}
-
-void		matches_c_task(int *board)
-{
-
-	mod = ((board[x] % 4) - 1) % 4;
-	matches_take(mod == 0? 1 : mod, board);
-}
-
-void		board_display(int *brd)
-{
-	int		c;
-	int		x;
-
-	c = 0;
-	x = 0;
-	while (brd && brd[x])
-	{
-		c = brd[x];
-		while (c-- != 0)
-			ft_printf(CYAN "|" RESET);
-		ft_printf("\n");
-		x++;
-	}
-}
-
-int			matches_p_task(int *board)
-{
-	char	*line;
-	int		res;
-
-	res = 0;
-	while (res == 0)
-	{
-		ft_printf(DARKGREY "YOUR TURN,PLEASE,TAKE FROM 1 "
-			"TO 3 MATCHES FROM THE LAST LINE\n" RESET);
-		get_next_line(0, &line);
-		if (line && (line[0] == '1' || line[0] == '2' ||
-			line[0] == '3') && line[1] == 0)
-			res = ft_atoi(line);
-		if (res != 0 && !matches_take(res, board))
-			res = 0;
-		free(line);
-	}
-	return (res);
-}
-
-int			matches_take(int matches, int *board)
-{
-	int		x;
-
-	x = 0;
-	while (board[x] != 0)
-		x++;
-	if (x && board[x - 1] < matches)
-		return (0);
-	if (board[x - 1] == matches)
-		board[x - 1] = 0;
-	else
-		board[x - 1] -= matches;
-	return (1);
 }
